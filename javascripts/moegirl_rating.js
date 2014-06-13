@@ -16,7 +16,7 @@ $(document).ready(function() {
           data = {};
           data.isDuplicated = false;
           data.hasRating = false;
-          data.score = 2.5;
+          data.score = 3.8;
           data.resultHtml = "<strong>7</strong> 人打分，平均分 <strong>3.8</strong> 分";
         }
 
