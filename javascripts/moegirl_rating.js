@@ -53,12 +53,13 @@ $(document).ready(function() {
             data = {};
             data.hasRating = true;
             data.isDuplicated = false;
-            data.score = 4.5;
+            var newScore =  ( 7 * 3.8 + ratingScore ) / 8
+            data.score = newScore;
 
             if (data.isDuplicated) {
               data.resultHtml = "你已经打过分了";
             } else {
-              var newScore =  ( 7 * 3.8 + ratingScore ) / 8
+              
               data.resultHtml = "<strong>8</strong> 人打分，平均分 <strong>" + newScore.toFixed(1)  + "</strong> 分";
             }
           }
