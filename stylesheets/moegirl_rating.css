@@ -25,7 +25,7 @@ ol, ul, li {
   width:150px;
   height: 30px;
   float: left;
-  background: url(./starrating.png) repeat-x 0 0;
+  background: url(../images/starrating.png) repeat-x 0 0;
   position: relative;
 }
 
@@ -36,7 +36,7 @@ ol, ul, li {
 
 .rating_body li a:hover {
   height:30px;
-  background:url(./starrating.png) repeat-x 0 -30px;
+  background:url(../images/starrating.png) repeat-x 0 -30px;
   position: relative; 
   z-index: 15;
   left: 0px;
@@ -44,7 +44,7 @@ ol, ul, li {
 
 .rating_body_result {
   height: 30px;
-  background: url(./starrating.png) repeat-x 0 -60px;
+  background: url(../images/starrating.png) repeat-x 0 -60px;
   position: absolute;
   top: 0;
   left: 0;
@@ -57,7 +57,7 @@ div.hide_result:hover {
 }
 
 .moegirl_rating .loading {
-  background: url(./loading.gif) no-repeat left center;
+  background: url(../images/loading.gif) no-repeat left center;
   width: 30px;
   height: 30px;
   display: block;
