@@ -35,7 +35,7 @@ $(document).ready(function() {
     ratingScore = correctScore(ratingScore);
 
     if ( hasRating || isDuplicated ) {
-      alert( "你已经打过分了" );
+      //alert( "你已经打过分了" );
     } else {
       $( ".rating_main" ).addClass( "rating_body_disabled" ).removeClass( "rating_body" );
       $( ".rating_body_result" ).width(0);
@@ -59,12 +59,18 @@ $(document).ready(function() {
             if (data.isDuplicated) {
               data.resultHtml = "你已经打过分了";
             } else {
-              
               data.resultHtml = "<strong>8</strong> 人打分，平均分 <strong>" + newScore.toFixed(1)  + "</strong> 分";
             }
           }
   
-          initialRating(data);
+          initGlobalState( data );
+          
+          $( ".rating_result" ).removeClass( "loading" ).addClass( "rating_success" ).text( "打分成功" );
+
+          setTimeout(function() {
+              $( ".rating_result" ).removeClass( "rating_success" ).html( data.resultHtml );
+              setScore( data.score );
+          }, 1000);
         }
       }).error(function() { 
         $( ".rating_result" ).removeClass( "loading" ).text( "错误，无法加载打分结果" );
@@ -73,19 +79,25 @@ $(document).ready(function() {
     }
   }
 
-  function initialRating( data ) {
+  function initGlobalState( data ) {
     isDuplicated = data.isDuplicated;
     hasRating = data.hasRating;
+  }
 
-    $(".rating_result").removeClass("loading").html(data.resultHtml);
+  function initialRating( data ) {
+    initGlobalState( data );
+    $( ".rating_result" ).removeClass( "loading" ).html( data.resultHtml );
+    setScore(data.score);
+  }
 
-    if ( !data.hasRating && !data.isDuplicated ) {
+  function setScore( originalScore ) {
+    if ( !hasRating && !isDuplicated ) {
       $( ".rating_main" ).addClass( "rating_body" ).removeClass( "rating_body_disabled" );
     } else {
       $( ".rating_main" ).addClass( "rating_body_disabled" ).removeClass( "rating_body" );
     }
 
-    var score = correctScore(data.score);
+    var score = correctScore(originalScore);
     $( ".rating_body_result" ).width( ( score / 5 ) * 150 );
   }
 

@@ -63,6 +63,11 @@ div.hide_result:hover {
   display: block;
 }
 
+.moegirl_rating .rating_success {
+  background: url(../images/green-check.png) no-repeat left center;
+  padding-left: 35px;
+}
+
 .rating_body a.r-1  { left: 0px;}
 .rating_body a.r-1:hover {left:0px; width:30px;}
 .rating_body a.r-2  { left: 30px;}
