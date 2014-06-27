@@ -1,117 +1,170 @@
-$(document).ready(function() {
-  var wikiId = "moegirl";
-  var isDuplicated = false;
-  var hasRating = false;
-  var ratingScore = 0;
+function stringFormat( format, args ) {
+  var result = format;
+  if ( arguments.length === 0 ) {
+    return '';
+  } else if ( arguments.length === 1 ) {
+    return format;
+  } else if ( $.isPlainObject( args ) ) {
+    result = format;
 
-  
-  setTimeout(function() {
-    $.ajax({
-      url: "",
-      type: "GET",
-      data: { 'wikiid': wikiId},
-      success: function(data) {
-        // @ForTest
-        {
-          data = {};
-          data.isDuplicated = false;
-          data.hasRating = false;
-          data.score = 3.8;
-          data.resultHtml = "<strong>7</strong> 人打分，平均分 <strong>3.8</strong> 分";
-        }
-
-        initialRating( data );
-        $( ".rating_body li a" ).click( function( event ) {
-          ratingClick( event );
-        });
+    for ( var key in args ) {
+      if (args[key] !== undefined ) {
+        var reg = new RegExp( '{' + key  + '}', 'g' );
+        result = result.replace(reg, args[key]);
       }
-    }).fail(function() {
-     $( ".rating_result" ).removeClass( "loading" ).text( "错误，无法加载打分结果" );
-    });
-  }, 1000);
+    }
 
-  function ratingClick( event ) {
-    ratingScore = new Number($(event.target).text());
-    ratingScore = correctScore(ratingScore);
+    return result;
 
-    if ( hasRating || isDuplicated ) {
-      //alert( "你已经打过分了" );
-    } else {
-      $( ".rating_main" ).addClass( "rating_body_disabled" ).removeClass( "rating_body" );
-      $( ".rating_body_result" ).width(0);
+  } else {
+    result = format;
+    for (var i = 0; i < (arguments.length - 1); i++) {
+      if (arguments[ i + 1 ] !== undefined) {
+　　　　var arrayReg = new RegExp( '({)' + i + '(})', 'g' );
+        result = result.replace( arrayReg, arguments[ i + 1 ] );
+      }
+    }
 
-      $(".rating_result").addClass("loading").html("");
+    return result;
+  }
+}
 
-      setTimeout(function () {
-      $.ajax({
-        url: "",
-        type: "GET",
-        data: { "score" : ratingScore },
-        success: function( data ) {
-          // @ForTest
-          {
-            data = {};
-            data.hasRating = true;
-            data.isDuplicated = false;
-            var newScore =  ( 7 * 3.8 + ratingScore ) / 8
-            data.score = newScore;
 
-            if (data.isDuplicated) {
-              data.resultHtml = "你已经打过分了";
-            } else {
-              data.resultHtml = "<strong>8</strong> 人打分，平均分 <strong>" + newScore.toFixed(1)  + "</strong> 分";
-            }
-          }
-  
-          initGlobalState( data );
-          
-          $( ".rating_result" ).removeClass( "loading" ).addClass( "rating_success" ).text( "打分成功" );
+function MoegirlRatingControl( id ) {
+  this.id = id;
+  this.data = {};
+  this.clickable = true;
+  this.resultTextFormat = '<strong>{0}</strong> 人打分，平均分 <strong>{1}</strong> 分';
+  this.ratingSuccessText = '打分成功';
+  this.cannotLoadResultErrorText = '错误，无法加载打分结果';
+}
 
-          setTimeout(function() {
-              $( ".rating_result" ).removeClass( "rating_success" ).html( data.resultHtml );
-              setScore( data.score );
-          }, 1000);
-        }
-      }).error(function() { 
-        $( ".rating_result" ).removeClass( "loading" ).text( "错误，无法加载打分结果" );
+MoegirlRatingControl.prototype.init =  function() {
+  var self = this;
+  $.ajax({
+    url: 'rating.php',
+    type: 'GET',
+    data: { getscore: null },
+    success: function( data ) {
+      if ( !data.isSuccess ) {
+        self.showErrorMessage( data.errorMessage );
+        return;
+      }
+      self.clickable = !data.isDuplicated && !data.isAnonymous; 
+
+      self.setResult( data.totalUsers, data.totalScore );
+      self.setScore( data.totalScore );
+      $( '.rating_body li a', self.id ).click( function( event ) {
+        self.ratingClick( event );
       });
-      }, 1000);
     }
+  }).fail(function() {
+   self.showErrorMessage( self.cannotLoadResultErrorText );
+  });
+};
+
+MoegirlRatingControl.prototype.showErrorMessage = function( errorMessage ) {
+  this.clickable = false;
+  this.setResultIcon( 'error' );
+  $( '.result_text', this.id ).text( errorMessage );
+};
+
+MoegirlRatingControl.prototype.ratingClick = function( event ) {
+  if ( !this.clickable ) {
+    // can't click
+  } else {
+    ratingScore = parseInt($(event.target).text(), 10);
+    ratingScore = this.correctScore(ratingScore);
+    this.clickable = false;
+
+    this.enterLoadState();
+
+    var self = this;
+    $.ajax({
+      url: 'rating.php',
+      type: 'POST',
+      data: { "score" : ratingScore,
+              "action"  : "rate" },
+      success: function( data ) {
+        if ( !data.isSuccess ) {
+          self.showErrorMessage( data.errorMessage );
+          return;
+        }
+
+        self.showSuccessMessage();
+
+        // wait a while after show the "Success" message.
+        setTimeout(function() {
+            self.setResult( data.totalUsers, data.totalScore );
+            self.setScore( data.totalScore );
+        }, 1500);
+      }
+    }).fail(function() { 
+      self.showErrorMessage( self.cannotLoadResultErrorText );
+    });
   }
 
-  function initGlobalState( data ) {
-    isDuplicated = data.isDuplicated;
-    hasRating = data.hasRating;
+};
+
+MoegirlRatingControl.prototype.showSuccessMessage = function() {
+  this.setResultIcon( 'success' );
+  $( '.result_text', this.id ).text( this.ratingSuccessText );
+};
+
+MoegirlRatingControl.prototype.enterLoadState = function() {
+    $( '.rating_main', this.id ).addClass( 'rating_body_disabled' ).removeClass( 'rating_body' );
+    $( '.rating_body_result', this.id ).width(0);
+    this.setResultIcon( 'loading' );
+    $( '.result_text', this.id ).html( '' );
+};
+
+MoegirlRatingControl.prototype.setResult = function( users, score ) {
+  var resultText = stringFormat( this.resultTextFormat, users, score );
+  this.setResultIcon( 'normal' );
+  $( '.result_text', this.id ).html( resultText );
+};
+
+MoegirlRatingControl.prototype.setScore = function( score ) {
+  if ( this.clickable ) {
+    $( '.rating_main', this.id ).addClass( 'rating_body' ).removeClass( 'rating_body_disabled' );
+  } else {
+    $( '.rating_main', this.id ).addClass( 'rating_body_disabled' ).removeClass( 'rating_body' );
   }
 
-  function initialRating( data ) {
-    initGlobalState( data );
-    $( ".rating_result" ).removeClass( "loading" ).html( data.resultHtml );
-    setScore(data.score);
+  score = this.correctScore(score);
+  $( '.rating_body_result', this.id ).width( ( score / 5 ) * 150 );
+};
+
+MoegirlRatingControl.prototype.correctScore = function( score ) {
+  if (score < 0) {
+    return 0;
+  } else if (score > 5) {
+    return 5;
+  } else {
+    return score;
   }
+};
 
-  function setScore( originalScore ) {
-    if ( !hasRating && !isDuplicated ) {
-      $( ".rating_main" ).addClass( "rating_body" ).removeClass( "rating_body_disabled" );
-    } else {
-      $( ".rating_main" ).addClass( "rating_body_disabled" ).removeClass( "rating_body" );
-    }
 
-    var score = correctScore(originalScore);
-    $( ".rating_body_result" ).width( ( score / 5 ) * 150 );
+
+/**
+ * Set the icon before the result text
+ * 
+ * @param { string } type the type of the icon. The type contain 'success', 
+ * 'error', 'loading' and 'normal'
+ *
+ * @return { void }
+ *
+ */
+MoegirlRatingControl.prototype.setResultIcon = function( type ) {
+  var $resultIcon = $( '.result_icon' );
+  if ( type === 'success' ) {
+    $resultIcon.removeClass( 'loading error' ).addClass( 'success' ).show();
+  } else if ( type === 'error' ) {
+    $resultIcon.removeClass( 'success loading' ).addClass( 'error' ).show();
+  } else if ( type === 'loading' ) {
+    $resultIcon.removeClass( 'success error' ).addClass( 'loading' ).show();
+  } else {
+    $resultIcon.removeClass( 'success error loading' ).hide();
   }
-
-
-  function correctScore(score) {
-    if (score < 0) {
-      return 0;
-    } else if (score > 5) {
-      return 5;
-    } else {
-      return score;
-    }
-  }
-    
-});
-
-
+};

@@ -9,7 +9,7 @@
 
 </head>
 <body>
-<div style="margin-top: 200px; width: 600px; margin-left: auto; margin-right: auto;">
+<div id="rating-main" style="margin-top: 200px; width: 600px; margin-left: auto; margin-right: auto;">
   <div class="moegirl_rating">
     <div class="rating_title">Wiki质量</div>
     <div class="rating_body_disabled rating_main" >
@@ -23,8 +23,12 @@
 
       <div class="rating_body_result" ></div>
     </div>
-    <div class="rating_result loading" ></div>
+    <div class="rating_result" ><div class="result_icon loading" ></div><div class="result_text" >测试用的测试数据........</div></div>
   </div>
+
+  <script type="text/javascript" >
+    new MoegirlRatingControl("#rating-main").init();
+  </script>
 </div>
 
 </body>

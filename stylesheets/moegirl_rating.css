@@ -56,17 +56,29 @@ div.hide_result:hover {
   z-index:0;
 }
 
-.moegirl_rating .loading {
+.rating_result .loading {
   background: url(../images/loading.gif) no-repeat left center;
-  width: 30px;
-  height: 30px;
-  display: block;
 }
 
-.moegirl_rating .rating_success {
+.rating_result .success {
   background: url(../images/green-check.png) no-repeat left center;
-  padding-left: 35px;
 }
+
+.rating_result .error {
+  background: url(../images/green-check.png) no-repeat left center;
+}
+
+.rating_result .result_icon {
+  width: 30px;
+  height: 30px;
+  float: left;
+}
+
+.rating_result .result_text {
+  float: left;
+  padding-left: 5px;
+}
+
 
 .rating_body a.r-1  { left: 0px;}
 .rating_body a.r-1:hover {left:0px; width:30px;}
