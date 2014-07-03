@@ -23,7 +23,7 @@
 
       <div class="rating_body_result" ></div>
     </div>
-    <div class="rating_result" ><div class="result_icon loading" ></div><div class="result_text" >测试用的测试数据........</div></div>
+    <div class="rating_result" ><div class="result_icon loading" ></div><div class="result_text" ></div></div>
   </div>
 
   <script type="text/javascript" >

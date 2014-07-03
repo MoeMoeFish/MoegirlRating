@@ -7,6 +7,5 @@ class RatingData {
   public $errorMessage = "";
   public $isAnonymous = true;
 }
-?>
 
 

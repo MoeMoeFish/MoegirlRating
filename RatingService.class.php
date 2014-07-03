@@ -3,11 +3,12 @@ class RatingService {
 
   private $ratingId;
 
-  public function __construct( $ratingId ) {
+  public function setRatingId( $ratingId ) {
     $this->$ratingId = $ratingId;
   }
 
   public function getTotalScore( $wikiId, &$totalScore, &$totalUsers ) {
+    
 
   }
 
@@ -15,4 +16,3 @@ class RatingService {
   }
 
 }
-?>
