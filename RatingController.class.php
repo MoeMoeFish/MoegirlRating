@@ -9,11 +9,11 @@ class RatingController {
   protected $service;
 
   public function setRatingService( $ratingService ) {
-    $this->$service = $ratingService;
+    $this->service = $ratingService;
   }
 
   public function getRatingService() {
-    return $this->$service;
+    return $this->service;
   }
 
   public static function isAnonymous() {

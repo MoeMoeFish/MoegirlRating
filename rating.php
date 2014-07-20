@@ -12,7 +12,10 @@ $ratingId = 1;
 $ratingService = new RatingService();
 $ratingService->setRatingId( $ratingId );
 
+
+
 $controller = new RatingController();
+
 $controller->setRatingService( $ratingService );
 
 $data = null; 
@@ -24,6 +27,7 @@ return;
 if ($_POST[ "action" ] != null && $_POST["action"] === "rate") {
   $data = $controller->rate();
 } elseif (isset($_GET["getscore"])) {
+  
   $data = $controller->getTotalScore();
 } else {
   $data = $controller->actionError();
