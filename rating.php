@@ -3,9 +3,8 @@ header( 'Content-type: application/json' );
 
 require_once "./RatingController.class.php";
 require_once "./RatingService.class.php";
-require_once "./RatingData.class.php";
 
-$ratingId = 1;
+$ratingId = 0;
 
 
 // The entrance
@@ -15,19 +14,15 @@ $ratingService->setRatingId( $ratingId );
 
 
 $controller = new RatingController();
-
 $controller->setRatingService( $ratingService );
 
-$data = null; 
-
-echo json_encode(new RatingData());
-return;
+//echo json_encode( array( isSuccess => true, totalScore => 2.7, totalUsers => 11  ) );
+//return;
 
 
 if ($_POST[ "action" ] != null && $_POST["action"] === "rate") {
   $data = $controller->rate();
 } elseif (isset($_GET["getscore"])) {
-  
   $data = $controller->getTotalScore();
 } else {
   $data = $controller->actionError();

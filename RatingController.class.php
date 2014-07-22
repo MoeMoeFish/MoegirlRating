@@ -10,6 +10,7 @@ class RatingController {
 
   public function setRatingService( $ratingService ) {
     $this->service = $ratingService;
+    $this->service->setRatingId( $this->getRatingId() );
   }
 
   public function getRatingService() {
@@ -25,17 +26,7 @@ class RatingController {
     //ToDo Error, anonymous, context, duplicated, socre range,
     $data = new RatingData();
 
-    //For Test
-    {
-      $data->isSuccess = true;
-      $data->errorMessage = "错误错误错误错误错误错误错误错误错误";
-      $data->totalScore = 1.3;
-      $data->totalUsers = 78;
-      
-      return $data;
-    }
-
-    if ( !getRatingContext() ) {
+    if ( !$this->getRatingContext() ) {
       $data->isSuccess = false;
       $data->errorMessage = "系统错误: 无法获取wiki页面信息";
 
@@ -52,16 +43,25 @@ class RatingController {
     }
 
     try {
-      $data->isDuplicated = $service->hasRatingToday( $userId );
+      $data->isDuplicated = $this->service->hasRatingToday( $this->wikiId, $this->userId );
 
       if ( $data->isDuplicated ) {
         $data->isSuccess = false;
-        $data->errorMessage = "重复投票: ";
+        $data->errorMessage = "今日已经投票，请明日再试";
 
         return $data;
       } 
 
-      $service->getTotalScore( wikiId, $data->totalScore, $data->totalUsers );
+      $score = intval($_POST['score']);
+
+      if ( $score == 0 || $score > 5 ) {
+        return array( isSuccess => false, errorMessage => '参数错误，投票分数不正确' );
+      }
+
+      $this->service->rateWiki( $this->wikiId, $this->userId, $score);
+
+      $this->service->getTotalScore( $this->wikiId, $data->totalScore, $data->totalUsers );
+      $data->totalScore = round( $data->totalScore, 2 );
       $data->isSuccess = true;
   
       return $data;
@@ -77,17 +77,7 @@ class RatingController {
   public function getTotalScore() {
     $data = new RatingData();
         
-    //For Test
-    {
-      $data->isSuccess = true;
-      $data->isAnonymous = false;
-      $data->totalScore = 2.8;
-      $data->totalUsers = 20;
-
-      return $data;
-    }
-
-    if ( !getRatingContext() ) {
+    if ( !$this->getRatingContext() ) {
       $data->isSuccess = false;
       $data->errorMessage = "系统错误: 无法获取wiki页面信息";
 
@@ -97,10 +87,11 @@ class RatingController {
     $data->isAnonymous = self::isAnonymous();
   
     try {
-      $data->isDuplicated = $service->hasRatingToday( $userId );
-      $service->getTotalScore( wikiId, $data->totalScore, $data->totalUsers );
+      $data->isDuplicated = $this->service->hasRatingToday( $this->wikiId, $this->userId );
+      $this->service->getTotalScore( $this->wikiId, $data->totalScore, $data->totalUsers );
+      $data->totalScore = round( $data->totalScore, 2 );
       $data->isSuccess = true;
-  
+        
       return $data;
     
     } catch ( Exception $ex ) {
@@ -121,9 +112,9 @@ class RatingController {
 
   private function getRatingContext() {
     try {
-      $wikiId = getWikiId();
-      $userId = getUserId();
-      $ratingId =  getRatingId();
+      $this->wikiId = $this->getWikiId();
+      $this->userId = $this->getUserId();
+      $this->ratingId = $this->getRatingId();
 
       return true;
     } catch ( Exception $ex ) {
@@ -132,13 +123,15 @@ class RatingController {
   }
 
   private function getWikiId() {
+    return 0;
   }
   
   private function getUserId() {
+    return 9;
   }
   
   private function getRatingId() {
-    return 1;
+    return 0;
   }
 
 }
