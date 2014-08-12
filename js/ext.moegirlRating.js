@@ -30,13 +30,14 @@ window.stringFormat = function ( format, args ) {
 };
 
 
-function MoegirlRatingControl( id ) {
+function MoegirlRatingControl( id, wikiId ) {
 	this.id = id;
 	this.data = {};
 	this.clickable = true;
 	this.resultTextFormat = '<strong>{0}</strong> 人打分，平均分 <strong>{1}</strong> 分';
 	this.ratingSuccessText = '打分成功';
 	this.cannotLoadResultErrorText = '错误，无法加载打分结果';
+	this.wikiId = wikiId;
 }
 
 window.MoegirlRatingControl = MoegirlRatingControl;
@@ -44,23 +45,31 @@ window.MoegirlRatingControl = MoegirlRatingControl;
 MoegirlRatingControl.prototype.init =  function() {
 	var self = this;
 	$.ajax({
-		url: 'rating.php',
+		url: '/api.php',
 		type: 'GET',
-		data: { getscore: null },
-		success: function( data ) {
-			if ( !data.isSuccess ) {
-				self.showErrorMessage( data.errorMessage );
-				return;
-			}
-			self.clickable = !data.isDuplicated && !data.isAnonymous; 
-
-			self.setResult( data.totalUsers, data.totalScore );
-			self.setScore( data.totalScore );
-			$( '.rating_body li a', self.id ).click( function( event ) {
-				self.ratingClick( event );
-			});
+		data: {
+			action: 'MRGetTotalRating',
+			format: 'json',
+			wikiId: this.wikiId
+		},
+		datatype: 'json'
+	})
+	.done (function( data ) {
+		data = data.MRGetTotalRating;
+		if ( !data.isSuccess ) {
+			self.showErrorMessage( data.errorMessage );
+			return;
 		}
-	}).fail(function() {
+		self.clickable = !data.isDuplicated && !data.isAnonymous;
+
+		self.setResult( data.totalUsers, data.totalScore );
+		self.setScore( data.totalScore );
+		$( '.rating_body li a', self.id ).click( function( event ) {
+			self.ratingClick( event );
+		});
+
+	})
+	.fail(function() {
 	 self.showErrorMessage( self.cannotLoadResultErrorText );
 	});
 };
@@ -85,9 +94,9 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 		$.ajax({
 			url: 'rating.php',
 			type: 'POST',
-			data: { 
+			data: {
 				score : ratingScore,
-				action  : "rate" 
+				action  : "rate"
 			},
 			success: function( data ) {
 				if ( !data.isSuccess ) {
@@ -104,7 +113,7 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 				}, 1500);
 			}
 		})
-		.fail(function() { 
+		.fail(function() {
 			self.showErrorMessage( self.cannotLoadResultErrorText );
 		});
 	}
@@ -153,8 +162,8 @@ MoegirlRatingControl.prototype.correctScore = function( score ) {
 
 /**
  * Set the icon before the result text
- * 
- * @param { string } type the type of the icon. The type contain 'success', 
+ *
+ * @param { string } type the type of the icon. The type contain 'success',
  * 'error', 'loading' and 'normal'
  *
  * @return { void }

@@ -10,7 +10,6 @@ $wgExtensionCredits[ 'parserhook' ][] = array (
   'license-name' => 'Apache-2.0+'
 );
 
-
 $wgResourceModules['ext.MoegirlRating'] = array(
     'scripts' => 'js/ext.moegirlRating.js',
 	'styles' => 'css/ext.moegirlRating.css',
@@ -18,8 +17,22 @@ $wgResourceModules['ext.MoegirlRating'] = array(
 	'remoteExtPath' => 'MoegirlRating'
 );
 
-$wgAutoloadClasses[ 'MoegirlRatingHooks' ] = __DIR__ . '/MoegirlRating.hooks.php';
+
+$wgAPIModules['MRGetTotalRating'] = 'MRGetTotalRatingApi';
 $wgHooks[ 'SkinAfterContent' ][] = 'MoegirlRatingHooks::onSkinAfterContent';
+
+
+$wgAutoloadClasses[ 'MoegirlRatingHooks' ] = __DIR__ . '/MoegirlRating.hooks.php';
+$wgAutoloadClasses[ 'MRGetTotalRatingApi' ] = __DIR__ . '/MoegirlRating.MRGetTotalRatingApi.php';
+$wgMoegirlRatingIncludes = __DIR__ . '/includes';
+$wgAutoloadClasses[ 'MRLogging' ] = $wgMoegirlRatingIncludes . '/MRLogging.php';
+$wgAutoloadClasses[ 'RatingService' ] = $wgMoegirlRatingIncludes . '/RatingService.class.php';
+$wgAutoloadClasses[ 'RatingController' ] = $wgMoegirlRatingIncludes . '/RatingController.class.php';
+
+$wgMoegirlRatingLogLevel = MRLogging::$TRACE;
+$wgMoegirlRatingLogDir = '/var/log/mediawiki';
+
+
 
 return true;
 
