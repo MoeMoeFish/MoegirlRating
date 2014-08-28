@@ -3,6 +3,12 @@ class MRGetTotalRatingApi extends ApiBase {
 	public function execute() {
 		$ratingId = 0;
 		$user = $this->getUser();
+
+		if (!isset( $user )) {
+			MRLogging::logging(MRLogging::$DEBUG, __FILE__, __LINE__, "Can't the user");
+			throw new Exception( 'Can\'t get user' );
+		}
+
 		$wikiId = $this->getMain()->getVal('wikiId');
 
 		$ratingController = new RatingController( $ratingId, $wikiId, $user );
@@ -13,6 +19,7 @@ class MRGetTotalRatingApi extends ApiBase {
 			$this->getResult()->addValue( null, $this->getModuleName(), $result );
 
 		} catch (Exception $ex) {
+			MRLogging::logging( MRLogging::$ERROR, __FILE__, __LINE__, 'Cannot get the rating score, wikiId %d', $wikiId);
 
 			$this->getResult()->addValue( null, $this->getModuleName(), array(
 					'isSuccess' => false,
@@ -20,20 +27,11 @@ class MRGetTotalRatingApi extends ApiBase {
 					));
 		}
 
-		//$this->getResult()->addValue( null, $this->getModuleName(), array( 'isSuccess' => true, 'wikiId' => $user->isAnon() ) );
-
-		//$this->getResult()->addValue( null, $this->getModuleName(), array( 
-		//		'isSuccess' => true, 
-		//		'isDuplicated' => false, 
-		//		'isAnonymous' => false, 
-		//		'totalScore' => 3.7, 
-		//		'totalUsers' => 98 ));
-
-
 		return true;
 	}
 
 	public function getDescription() {
+		return 'Get the rating average score and total rating users';
 	}
 
 	public function getAllowedParams() {

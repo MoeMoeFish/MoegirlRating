@@ -9,7 +9,7 @@ class MRLogging {
 	public static $FATAL = 5;
 	public static $NONE = 6;
 
-	public static function Logging( $level, $fileabsoluteName, $lineNumber, $format ) {
+	public static function logging( $level, $fileabsoluteName, $lineNumber, $format ) {
 		global $wgMoegirlRatingLogLevel, $wgMoegirlRatingLogDir;
 		
 		if ( $level >= $wgMoegirlRatingLogLevel &&  isset($wgMoegirlRatingLogDir)) {
@@ -32,7 +32,7 @@ class MRLogging {
 			}
 
 
-			$logEntry = sprintf( "%s%s %s %s -- %s:%s\n", $timeString1, $timeString2,  MRLogging::$logLevelStrings[ $level ], $content, $fileName, $lineNumber );
+			$logEntry = sprintf( "%s%s %s %s -- %s:%s\n", $timeString1, $timeString2,  self::$logLevelStrings[ $level ], $content, $fileName, $lineNumber );
 			$logFile = $wgMoegirlRatingLogDir . '/MoegirlRating-' . $dateString . '.log';
 
 			wfErrorLog( $logEntry, $logFile );

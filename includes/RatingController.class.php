@@ -10,9 +10,13 @@ class RatingController {
 	public function __construct( $ratingId, $wikiId, $currentUser ) {
 		$this->ratingId = $ratingId;
 		$this->currentUser = $currentUser;
+		$this->userId = $currentUser->getId();
 		$this->wikiId = $wikiId;
 		$this->service = new RatingService();
 		$this->service->setRatingId( $this->ratingId );
+
+		MRLogging::logging( MRLogging::$TRACE, __FILE__, __LINE__, "create RatingController, ratingId: %d, userId: %d, wikiId %d",
+			$this->ratingId, $this->userId, $this->wikiId );
 	}
 
 	public function isAnonymous() {
@@ -30,7 +34,7 @@ class RatingController {
 			return $data;
 		}
 
-		$data->isAnonymous = self::isAnonymous();
+		$data->isAnonymous = $this->isAnonymous();
 
 		if ( $data->isAnonymous ) {
 			$data->isSuccess = false;
@@ -72,71 +76,56 @@ class RatingController {
 	}
 
 	public function getTotalScore() {
+		$data = array();
 				
-		if ( !$this->getRatingContext() ) {
+		if ( !$this->checkRatingContext() ) {
 			return array(
 				'isSuccess' => false,
 				'message' => '系统错误：无法获取wiki页面信息'
 				);
-			$data->isSuccess = false;
-			$data->errorMessage = "系统错误: 无法获取wiki页面信息";
-
-			return $data;
 		}
 
-		$data->isAnonymous = self::isAnonymous();
+		$data[ 'isAnonymous' ] = $this->isAnonymous();
+
 	
 		try {
-			$data->isDuplicated = $this->service->hasRatingToday( $this->wikiId, $this->userId );
-			$this->service->getTotalScore( $this->wikiId, $data->totalScore, $data->totalUsers );
-			$data->totalScore = round( $data->totalScore, 2 );
-			$data->isSuccess = true;
+			$data[ 'isDuplicated' ] = $this->service->hasRatingToday( $this->wikiId, $this->userId );
+			$totalScore = 0;
+			$totalUsers = 0;
+			$this->service->getTotalScore( $this->wikiId, $totalScore, $totalUsers );
+			$data[ 'totalUsers' ] = $totalUsers;
+			$data[ 'totalScore' ] = round( $totalScore, 2 );
+			$data[ 'isSuccess' ] = true;
+
+			MRLogging::logging( MRLogging::$DEBUG, __FILE__, __LINE__, "Rating result, wikiId: %d, totalUsers %d, totalScore %d", 
+				$this->wikiId, $totalUsers, $totalScore );
 				
 			return $data;
 		
 		} catch ( Exception $ex ) {
-			$data->isSuccess = false;
-			$data->errorMessage = $ex->getMessage();
+			$MRLogging::logging( MRLogging::$DEBUG, __FILE__, __LINE__, "Get Rating total score error: %s", $ex->getMessage());
+			$data[ 'isSuccess' ] = false;
+			$data[ 'message' ] = $ex->getMessage();
 	
 			return $data;
 		}
 	}
 
-	public function actionError() {
-		$data = new RatingData();
-		$data->isSuccess = false;
-		$data->errorMessage = "系统错误: 没有相应的操作";
-
-		return $data;
-	}
 
 	private function checkRatingContext() {
 		
-
-	}
-
-	private function getRatingContext() {
-		try {
-			$this->wikiId = $this->getWikiId();
-			$this->userId = $this->getUserId();
-			$this->ratingId = $this->getRatingId();
-
-			return true;
-		} catch ( Exception $ex ) {
+		if ( !isset( $this->wikiId )) {
+			MRLogging::logging( MRLogging::$DEBUG, __FILE__, __LINE__, "Don't set the wikiId" );
 			return false;
 		}
-	}
 
-	private function getWikiId() {
-		return 0;
-	}
-	
-	private function getUserId() {
-		return 9;
-	}
-	
-	private function getRatingId() {
-		return 0;
-	}
+		if ( $this->wikiId <= 0 ) {
+			MRLogging::logging( MRLogging::$DEBUG, __FILE__, __LINE__, "Wiki id is less than 0" );
+			return false;
+		}
 
+		if ( !isset( $this->user ))
+
+		return true;
+	}
 }

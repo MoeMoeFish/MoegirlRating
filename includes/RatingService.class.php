@@ -31,8 +31,9 @@ class RatingService {
         $totalScore = 0;
         $totalUsers = 0;
       }
-    } catch (PDOException $e) {
-      //echo 'Error: ' . $e->getMessage() . "\n";
+    } catch (PDOException $ex) {
+		MRLogging::logging( MRLogging::$FATAL, __FILE__, __LINE__, $ex->getMessage());
+		throw $ex;
     }
   }
 
@@ -49,7 +50,8 @@ class RatingService {
       return ( $stmt->rowCount() >= 1);
 
     } catch ( PDOException $ex ) {
-      echo 'Error: ' . $e->getMessage() . "\n";
+		MRLogging::logging( MRLogging::$FATAL, __FILE__, __LINE__, $ex->getMessage());
+		throw $ex;
 
     }
   }
@@ -77,7 +79,8 @@ class RatingService {
       $stmt2->execute();
         
     } catch ( PDOException $ex ) {
-      echo 'Error: ' . $ex->getMessage() . "\n";
+		MRLogging::logging( MRLogging::$FATAL, __FILE__, __LINE__, $ex->getMessage());
+		throw $ex;
     }
   }
 }
