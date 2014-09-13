@@ -9,6 +9,96 @@ class MRLogging {
 	public static $FATAL = 5;
 	public static $NONE = 6;
 
+	private $fileAbsoluteName;
+
+	public function __construct ( $fileAbsoluteName ) {
+		$this->fileAbsoluteName = $fileAbsoluteName;
+	}
+
+	public function trace( $lineNumber, $format ) {
+		$varsArray = array();
+		$varsArray[] = self::$TRACE;
+		$varsArray[] = $this->fileAbsoluteName;
+
+
+		for ( $i = 0; $i < func_num_args(); $i++ ) {
+			$varsArray[] = func_get_arg($i);
+		}
+
+		call_user_func_array( 'MRLogging::logging', $varsArray);
+
+	}
+	
+	public function debug( $lineNumber, $format ) {
+		$varsArray = array();
+		$varsArray[] = self::$DEBUG;
+		$varsArray[] = $this->fileAbsoluteName;
+
+
+		for ( $i = 0; $i < func_num_args(); $i++ ) {
+			$varsArray[] = func_get_arg($i);
+		}
+
+		call_user_func_array( 'MRLogging::logging', $varsArray);
+
+	}
+
+	public function info( $lineNumber, $format ) {
+		$varsArray = array();
+		$varsArray[] = self::$INFO;
+		$varsArray[] = $this->fileAbsoluteName;
+
+
+		for ( $i = 0; $i < func_num_args(); $i++ ) {
+			$varsArray[] = func_get_arg($i);
+		}
+
+		call_user_func_array( 'MRLogging::logging', $varsArray);
+
+	}
+
+	public function warn( $lineNumber, $format ) {
+		$varsArray = array();
+		$varsArray[] = self::$WARN;
+		$varsArray[] = $this->fileAbsoluteName;
+
+
+		for ( $i = 0; $i < func_num_args(); $i++ ) {
+			$varsArray[] = func_get_arg($i);
+		}
+
+		call_user_func_array( 'MRLogging::logging', $varsArray);
+
+	}
+
+	public function error( $lineNumber, $format ) {
+		$varsArray = array();
+		$varsArray[] = self::$ERROR;
+		$varsArray[] = $this->fileAbsoluteName;
+
+
+		for ( $i = 0; $i < func_num_args(); $i++ ) {
+			$varsArray[] = func_get_arg($i);
+		}
+
+		call_user_func_array( 'MRLogging::logging', $varsArray);
+
+	}
+
+	public function fatal( $lineNumber, $format ) {
+		$varsArray = array();
+		$varsArray[] = self::$FATAL;
+		$varsArray[] = $this->fileAbsoluteName;
+
+
+		for ( $i = 0; $i < func_num_args(); $i++ ) {
+			$varsArray[] = func_get_arg($i);
+		}
+
+		call_user_func_array( 'MRLogging::logging', $varsArray);
+
+	}
+
 	public static function logging( $level, $fileabsoluteName, $lineNumber, $format ) {
 		global $wgMoegirlRatingLogLevel, $wgMoegirlRatingLogDir;
 		
@@ -42,10 +132,8 @@ class MRLogging {
 	private static $logLevelStrings = array(
 		0 => 'TRACE',
 		1 => 'DEBUG',
-		2 => 'INFO',
-		3 => 'WARN',
+		2 => 'INFOM',
+		3 => 'WARNN',
 		4 => 'ERROR',
 		5 => 'FATAL' );
-
-	
 }

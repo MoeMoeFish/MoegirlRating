@@ -18,12 +18,14 @@ $wgResourceModules['ext.MoegirlRating'] = array(
 );
 
 
-$wgAPIModules['MRGetTotalRating'] = 'MRGetTotalRatingApi';
+$wgAPIModules[ 'MRGetTotalRating' ] = 'MRGetTotalRatingApi';
+$wgAPIModules[ 'MRRate' ] = 'MRRateApi';
 $wgHooks[ 'SkinAfterContent' ][] = 'MoegirlRatingHooks::onSkinAfterContent';
 
 
 $wgAutoloadClasses[ 'MoegirlRatingHooks' ] = __DIR__ . '/MoegirlRating.hooks.php';
 $wgAutoloadClasses[ 'MRGetTotalRatingApi' ] = __DIR__ . '/MoegirlRating.MRGetTotalRatingApi.php';
+$wgAutoloadClasses[ 'MRRateApi' ] = __DIR__ . '/MoegirlRating.MRRateApi.php';
 $wgMoegirlRatingIncludes = __DIR__ . '/includes';
 $wgAutoloadClasses[ 'MRLogging' ] = $wgMoegirlRatingIncludes . '/MRLogging.php';
 $wgAutoloadClasses[ 'RatingService' ] = $wgMoegirlRatingIncludes . '/RatingService.class.php';

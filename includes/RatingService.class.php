@@ -32,7 +32,7 @@ class RatingService {
         $totalUsers = 0;
       }
     } catch (PDOException $ex) {
-		MRLogging::logging( MRLogging::$FATAL, __FILE__, __LINE__, $ex->getMessage());
+		MRLogging::logging( MRLogging::$FATAL, __FILE__, __LINE__, 'Database error: ' . $ex->getMessage());
 		throw $ex;
     }
   }
@@ -50,7 +50,7 @@ class RatingService {
       return ( $stmt->rowCount() >= 1);
 
     } catch ( PDOException $ex ) {
-		MRLogging::logging( MRLogging::$FATAL, __FILE__, __LINE__, $ex->getMessage());
+		MRLogging::logging( MRLogging::$FATAL, __FILE__, __LINE__, 'Database error: ' . $ex->getMessage());
 		throw $ex;
 
     }
@@ -79,7 +79,7 @@ class RatingService {
       $stmt2->execute();
         
     } catch ( PDOException $ex ) {
-		MRLogging::logging( MRLogging::$FATAL, __FILE__, __LINE__, $ex->getMessage());
+		MRLogging::logging( MRLogging::$FATAL, __FILE__, __LINE__, 'Database error: ' . $ex->getMessage());
 		throw $ex;
     }
   }

@@ -92,13 +92,17 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 
 		var self = this;
 		$.ajax({
-			url: 'rating.php',
-			type: 'POST',
+			url: 'api.php',
+			type: 'GET',
 			data: {
+				format: 'json',
 				score : ratingScore,
-				action  : "rate"
+				action  : 'MRRate',
+				wikiId :  this.wikiId
 			},
+			datatype: 'json',
 			success: function( data ) {
+				data = data.MRRate;
 				if ( !data.isSuccess ) {
 					self.showErrorMessage( data.errorMessage );
 					return;
