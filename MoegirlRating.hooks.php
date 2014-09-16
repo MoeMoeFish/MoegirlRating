@@ -1,7 +1,7 @@
 <?php
 
 final class MoegirlRatingHooks {
-  public static function onSkinAfterContent(&$data, $skin) {
+	public static function onSkinAfterContent( &$data, $skin ) {
 //    $data .= '<div>MoegirlRatingHooks</div>';
 	$articleId = $skin->getTitle()->getArticleID();
 	MRLogging::Logging( MRLogging::$DEBUG, __FILE__, __LINE__, "Append to articleId: %d", $articleId );
@@ -32,6 +32,12 @@ final class MoegirlRatingHooks {
 </script>
 EOF;
 
-    return true;
-  }
+	return true;
+	}
+
+	public static function addDatabases( DatabaseUpdater $updater ) {
+		$updater->addExtensionUpdate( array( 'addTable', 'rating_record', __DIR__  . '/sql/create-rating-history-table.sql', true ) );
+
+		return true;
+	}
 }

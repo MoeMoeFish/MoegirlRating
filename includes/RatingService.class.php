@@ -1,37 +1,56 @@
 <?php
 class RatingService {
+	private $logger;	
 
-  private $ratingId;
-  private static $dbConnectionString = 'mysql:host=127.0.0.1;port=3306;dbname=test';
-  private static $dbUser = 'moegirl';
-  private static $dbPassword = '456';
+	private $ratingId;
+	private static $dbConnectionString = 'mysql:host=127.0.0.1;port=3306;dbname=mediawiki';
+  //private static $dbUser = 'moegirl';
+  //private static $dbPassword = '456';
+	private static $dbUser = 'mediawiki';
+	private static $dbPassword = '123';
 
-  public function setRatingId( $ratingId ) {
-    $this->ratingId = $ratingId;
-  }
 
-  public function getTotalScore( $wikiId, &$totalScore, &$totalUsers ) {
+	public function __construct() {
+		$this->logger = new MRLogging( __FILE__ );
+    }
+
+
+	public function setRatingId( $ratingId ) {
+		$this->ratingId = $ratingId;
+	}
+
+  public function getTotalScore( $wikiId, &$averageScore, &$totalUsers ) {
     try {
-      $dbh = new PDO( self::$dbConnectionString, self::$dbUser, self::$dbPassword, array( PDO::ATTR_PERSISTENT => true )); 
-      $stmt = $dbh->prepare( 'SELECT SUM(score) score, COUNT(score) users  FROM rating_record WHERE wiki_id = :wikiId AND rating_id = :ratingId AND DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= created_time;' );
-      $stmt->bindParam( ':wikiId', $wikiId);
-      $stmt->bindParam( ':ratingId', $this->ratingId );
+		global $wgDBprefix;
+		$dbr =& wfGetDB( DB_SLAVE );
+		$sql = sprintf( SqlSentences::$getAverageScoreSentence, $wgDBprefix, $wikiId, $this->ratingId );
+		$this->logger->debug( 'getTotalScore sql is ' . $sql );
+		
+		$output = $dbr->query( $sql, __METHOD__ );
+		
+		$this->logger->debug( __LINE__, 'dbr result, score is ' . $output->current()->score . ' users is ' . $output->current()->users );
 
-      $stmt->execute();
+		if ( $output->numRows > 0 ) {
+			$result = $output->current();
+			$totalUsers = $result->users;
+			
+			$averageScore = 0;
 
-      if ( $stmt->rowCount() ) {
-       $row = $stmt->fetch(); 
-       $totalUsers = $row[ 'users' ];
+			if ( $totalUsers ) {
+				$averageScore =  $result->score / $totalUsers;
+			}
+			
+		} else {
+			$totalUsers = 0;
+			$averageScore = 0;
 
-       if ( $totalUsers ) {
-         $totalScore = ((int)$row[ 'score' ]) / $totalUsers;
-       }
-       
-      } else {
-        $totalScore = 0;
-        $totalUsers = 0;
-      }
-    } catch (PDOException $ex) {
+			$this->logger->debug( __LINE__ , 'ERROR: Can\'t fetch rating scores from database.' );
+		}
+
+		$totalUsers = $output->current()->users;
+		$averageScore = $output->current()->score / $totalUsers;
+
+    } catch (MWException $ex) {
 		MRLogging::logging( MRLogging::$FATAL, __FILE__, __LINE__, 'Database error: ' . $ex->getMessage());
 		throw $ex;
     }
@@ -39,8 +58,19 @@ class RatingService {
 
   public function hasRatingToday( $wikiId, $userId ) {
     try {
+		global $wgDBprefix;
+		$dbr =& wfGetDB( DB_SLAVE );
+		$sql = sprintf( SqlSentences::hasRatingTodaySentence, $wgDBprefix, $userId, $wikiId, $this->ratingId );
+		$this->logger->debug( 'hasRatingToday sql is ', $sql );
+
+		$output = $dbr->query( $sql, __METHOD__ );
+
+
+		
+
+
       $dbh = new PDO( self::$dbConnectionString, self::$dbUser, self::$dbPassword, array( PDO::ATTR_PERSISTENT => true ));  
-      $stmt = $dbh->prepare( 'SELECT id FROM rating_record WHERE user_id = :userId AND wiki_id = :wikiId AND rating_id = :ratingId AND DATE(created_time) = CURRENT_DATE()' );
+      $stmt = $dbh->prepare( 'SELECT id FROM mwrating_record WHERE user_id = :userId AND wiki_id = :wikiId AND rating_id = :ratingId AND DATE(created_time) = CURRENT_DATE();' );
       $stmt->bindParam( ':userId', $userId );
       $stmt->bindParam( ':wikiId', $wikiId );
       $stmt->bindParam( ':ratingId', $this->ratingId );
@@ -59,7 +89,7 @@ class RatingService {
   public function rateWiki( $wikiId, $userId, $score ) {
     try {
       $dbh = new PDO( self::$dbConnectionString, self::$dbUser, self::$dbPassword, array( PDO::ATTR_PERSISTENT => true )); 
-      $stmt = $dbh->prepare( 'SELECT id FROM rating_record WHERE user_id = :userId AND wiki_id = :wikiId AND rating_id = :ratingId' );
+      $stmt = $dbh->prepare( 'SELECT id FROM mwrating_record WHERE user_id = :userId AND wiki_id = :wikiId AND rating_id = :ratingId' );
       $stmt->bindParam( ':userId', $userId );
       $stmt->bindParam( ':wikiId', $wikiId );
       $stmt->bindParam( ':ratingId', $this->ratingId );
@@ -67,9 +97,9 @@ class RatingService {
       
       $stmt2 = '';
       if ( $stmt->rowCount() >= 1) {
-        $stmt2 = $dbh->prepare( 'UPDATE rating_record SET score = :score, created_time = NOW() WHERE user_id = :userId AND wiki_id = :wikiId AND rating_id = :ratingId;' );
+        $stmt2 = $dbh->prepare( 'UPDATE mwrating_record SET score = :score, created_time = NOW() WHERE user_id = :userId AND wiki_id = :wikiId AND rating_id = :ratingId;' );
       } else {
-        $stmt2 = $dbh->prepare( 'INSERT INTO rating_record(wiki_id, user_id, rating_id, created_time, score) VALUES (:wikiId, :userId, :ratingId, NOW(), :score);' ); 
+        $stmt2 = $dbh->prepare( 'INSERT INTO mwrating_record(wiki_id, user_id, rating_id, created_time, score) VALUES (:wikiId, :userId, :ratingId, NOW(), :score);' ); 
       }
       $stmt2->bindParam( ':userId', $userId );
       $stmt2->bindParam( ':wikiId', $wikiId );

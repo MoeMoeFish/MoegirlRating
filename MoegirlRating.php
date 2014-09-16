@@ -21,6 +21,7 @@ $wgResourceModules['ext.MoegirlRating'] = array(
 $wgAPIModules[ 'MRGetTotalRating' ] = 'MRGetTotalRatingApi';
 $wgAPIModules[ 'MRRate' ] = 'MRRateApi';
 $wgHooks[ 'SkinAfterContent' ][] = 'MoegirlRatingHooks::onSkinAfterContent';
+$wgHooks[ 'LoadExtensionSchemaUpdates' ][] = 'MoegirlRatingHooks::addDatabases';
 
 
 $wgAutoloadClasses[ 'MoegirlRatingHooks' ] = __DIR__ . '/MoegirlRating.hooks.php';
@@ -30,6 +31,7 @@ $wgMoegirlRatingIncludes = __DIR__ . '/includes';
 $wgAutoloadClasses[ 'MRLogging' ] = $wgMoegirlRatingIncludes . '/MRLogging.php';
 $wgAutoloadClasses[ 'RatingService' ] = $wgMoegirlRatingIncludes . '/RatingService.class.php';
 $wgAutoloadClasses[ 'RatingController' ] = $wgMoegirlRatingIncludes . '/RatingController.class.php';
+$wgAutoloadClasses[ 'SqlSentences' ] = $wgMoegirlRatingIncludes . '/SqlSentences.class.php';
 
 $wgMoegirlRatingLogLevel = MRLogging::$TRACE;
 $wgMoegirlRatingLogDir = '/var/log/mediawiki';
