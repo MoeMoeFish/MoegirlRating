@@ -1,4 +1,12 @@
-ol, ul, li {
+.clearfix:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
+
+.moegirl_rating ol, .moegirl_rating ul, .moegirl_rating li {
 	list-style-image: none;
 	list-style-position: outside;
 	list-style-type: none;

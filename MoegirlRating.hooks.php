@@ -24,8 +24,8 @@ final class MoegirlRatingHooks {
 		MRLogging::logging( MRLogging::$INFO, __FILE__, __LINE__, 'Moegirl rating show in wiki: ' . $articleId );
 
 		$data .=<<<EOF
-<div id="rating-main" style="width: 600px;">
-  <div class="moegirl_rating">
+<div id="rating-main">
+  <div class="moegirl_rating clearfix">
     <div class="rating_title">给本篇wiki打分:</div>
     <div class="rating_body_disabled rating_main" >
       <ul>
