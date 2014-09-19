@@ -26,8 +26,6 @@ class RatingController {
 	}
 
 	public function rate( $score ) {
-		//ToDo Error, anonymous, context, duplicated, socre range,
-
 		$data = array();
 
 		$data[ 'isAnonymous' ] = $this->isAnonymous();
@@ -58,12 +56,12 @@ class RatingController {
 
 			$this->service->rateWiki( $this->wikiId, $this->userId, $score);
 
-			$totalScore = 0;
+			$averageScore = 0;
 			$totalUsers = 0;
 
-			$this->service->getTotalScore( $this->wikiId, $totalScore, $totalUsers );
+			$this->service->getAverageScore( $this->wikiId, $averageScore, $totalUsers );
 
-			$data[ 'totalScore' ] = round( $totalScore, 2 );
+			$data[ 'averageScore' ] = round( $averageScore, 2 );
 			$data[ 'totalUsers' ] = $totalUsers;
 			$data[ 'isSuccess' ] = true;
 
@@ -74,7 +72,7 @@ class RatingController {
 		}
 	}
 
-	public function getTotalScore() {
+	public function getScore() {
 		$data = array();
 				
 		if ( !$this->checkRatingContext() ) {
@@ -88,14 +86,14 @@ class RatingController {
 	
 		try {
 			$data[ 'isDuplicated' ] = $this->service->hasRatingToday( $this->wikiId, $this->userId );
-			$totalScore = 0;
+			$averageScore = 0;
 			$totalUsers = 0;
-			$this->service->getTotalScore( $this->wikiId, $totalScore, $totalUsers );
+			$this->service->getAverageScore( $this->wikiId, $averageScore, $totalUsers );
 			$data[ 'totalUsers' ] = $totalUsers;
-			$data[ 'totalScore' ] = round( $totalScore, 2 );
+			$data[ 'averageScore' ] = round( $averageScore, 2 );
 			$data[ 'isSuccess' ] = true;
 
-			$this->logger->debug( __LINE__, 'Rating result, wikiId: %d, totalUsers %d, totalScore %d', $this->wikiId, $totalUsers, $totalScore );
+			$this->logger->debug( __LINE__, 'Rating result, wikiId: %d, totalUsers %d, averageScore %d', $this->wikiId, $totalUsers, $averageScore );
 				
 			return $data;
 		

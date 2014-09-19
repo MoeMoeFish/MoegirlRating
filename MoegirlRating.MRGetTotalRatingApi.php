@@ -31,7 +31,7 @@ class MRGetTotalRatingApi extends ApiBase {
 		$ratingController = new RatingController( $ratingId, $wikiId, $user );
 
 		try {
-			$result = $ratingController->getTotalScore();
+			$result = $ratingController->getScore();
 
 			$this->getResult()->addValue( null, $this->getModuleName(), $result );
 

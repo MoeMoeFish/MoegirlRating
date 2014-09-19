@@ -62,8 +62,8 @@ MoegirlRatingControl.prototype.init =  function() {
 		}
 		self.clickable = !data.isDuplicated && !data.isAnonymous;
 
-		self.setResult( data.totalUsers, data.totalScore );
-		self.setScore( data.totalScore );
+		self.setResult( data.totalUsers, data.averageScore );
+		self.setScore( data.averageScore );
 		$( '.rating_body li a', self.id ).click( function( event ) {
 			self.ratingClick( event );
 		});
@@ -112,8 +112,8 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 
 				// wait a while after show the "Success" message.
 				setTimeout(function() {
-					self.setResult( data.totalUsers, data.totalScore );
-				    self.setScore( data.totalScore );
+					self.setResult( data.totalUsers, data.averageScore );
+				    self.setScore( data.averageScore );
 				}, 1500);
 			}
 		})
