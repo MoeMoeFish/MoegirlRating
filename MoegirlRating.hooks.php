@@ -2,12 +2,28 @@
 
 final class MoegirlRatingHooks {
 	public static function onSkinAfterContent( &$data, $skin ) {
-//    $data .= '<div>MoegirlRatingHooks</div>';
-	$articleId = $skin->getTitle()->getArticleID();
-	MRLogging::Logging( MRLogging::$DEBUG, __FILE__, __LINE__, "Append to articleId: %d", $articleId );
+		$pageTitle = $skin->getTitle();
+		$output = $skin->getOutput();
+		$request = $skin->getRequest();
+
+		if ( $pageTitle->isSpecialPage()
+			|| $pageTitle->getArticleID() == 0
+			|| !$pageTitle->canTalk()
+			|| $pageTitle->isTalkPage()
+		//	|| method_exists( $pageTitle, 'isMainPage' ) && $pageTitle->isMainPage() // 主页
+			|| in_array( $pageTitle->getNamespace(), array( NS_MEDIAWIKI, NS_TEMPLATE, NS_CATEGORY, NS_FILE))
+			|| $output->isPrintable()
+			|| $request->getVal( 'action', 'view' ) != 'view' 
+			) {
+
+			return true;
+		}
 
 
-    $data .=<<<EOF
+		$articleId = $skin->getTitle()->getArticleID();
+		MRLogging::logging( MRLogging::$INFO, __FILE__, __LINE__, 'Moegirl rating show in wiki: ' . $articleId );
+
+		$data .=<<<EOF
 <div id="rating-main" style="width: 600px;">
   <div class="moegirl_rating">
     <div class="rating_title">给本篇wiki打分:</div>
@@ -32,7 +48,7 @@ final class MoegirlRatingHooks {
 </script>
 EOF;
 
-	return true;
+		return true;
 	}
 
 	public static function addDatabases( DatabaseUpdater $updater ) {
