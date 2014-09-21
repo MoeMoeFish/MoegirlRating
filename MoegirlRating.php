@@ -33,8 +33,8 @@ $wgAutoloadClasses[ 'RatingService' ] = $wgMoegirlRatingIncludes . '/RatingServi
 $wgAutoloadClasses[ 'RatingController' ] = $wgMoegirlRatingIncludes . '/RatingController.class.php';
 $wgAutoloadClasses[ 'SqlSentences' ] = $wgMoegirlRatingIncludes . '/SqlSentences.class.php';
 
-$wgMoegirlRatingLogLevel = MRLogging::$TRACE;
-$wgMoegirlRatingLogDir = '/var/log/mediawiki';
+$wgMoegirlRatingLogLevel = MRLogging::$NONE;
+$wgMoegirlRatingLogDir;
 
 
 
