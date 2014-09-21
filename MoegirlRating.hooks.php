@@ -28,7 +28,7 @@ final class MoegirlRatingHooks {
   <div class="moegirl_rating clearfix">
     <div class="rating_title">给本篇wiki打分:</div>
     <div class="rating_body_disabled rating_main" >
-      <ul>
+      <ul class="mr-rating-ul">
         <li><a class="r-1" >1</a></li>
         <li><a class="r-2" >2</a></li>
         <li><a class="r-3" >3</a></li>
@@ -37,6 +37,7 @@ final class MoegirlRatingHooks {
       </ul>
 
       <div class="rating_body_result" ></div>
+	  <div class="moegirl-rating-error-tip"></div>
     </div>
     <div class="rating_result" ><div class="result_icon loading" ></div><div class="result_text" ></div></div>
   </div>

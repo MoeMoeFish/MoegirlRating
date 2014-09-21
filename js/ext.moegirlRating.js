@@ -60,6 +60,8 @@ MoegirlRatingControl.prototype.init =  function() {
 			self.showErrorMessage( data.errorMessage );
 			return;
 		}
+
+		self.prepareUnableClickError( data.isAnonymous, data.isDuplicated );
 		self.clickable = !data.isDuplicated && !data.isAnonymous;
 
 		self.setResult( data.totalUsers, data.averageScore );
@@ -72,6 +74,20 @@ MoegirlRatingControl.prototype.init =  function() {
 	.fail(function() {
 	 self.showErrorMessage( self.cannotLoadResultErrorText );
 	});
+};
+
+MoegirlRatingControl.prototype.bindErrorTip = function( errorMessage ) {
+	$( '.moegirl-rating-error-tip' ).text( errorMessage );
+	$( '.rating_main', this.id ).mouseenter( function() {
+		$( this ).find( '.moegirl-rating-error-tip' ).show();
+	} ).mouseleave( function() {
+		$( this ).find( '.moegirl-rating-error-tip' ).hide();
+	});
+};
+
+MoegirlRatingControl.prototype.unbindErrorTip = function() {
+	$( '.moegirl-rating-error-tip', this.id ).hide();
+	$( '.rating_main', this.id ).off( 'mouseenter' ).off( 'mouseleave' );
 };
 
 MoegirlRatingControl.prototype.showErrorMessage = function( errorMessage ) {
@@ -109,6 +125,7 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 				}
 
 				self.showSuccessMessage();
+				self.prepareUnableClickError( data.isAnonymous, true );
 
 				// wait a while after show the "Success" message.
 				setTimeout(function() {
@@ -120,6 +137,16 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 		.fail(function() {
 			self.showErrorMessage( self.cannotLoadResultErrorText );
 		});
+	}
+};
+
+MoegirlRatingControl.prototype.prepareUnableClickError = function( isAnonymous, isDuplicated ) {
+	if ( isAnonymous ) {
+		this.bindErrorTip( '匿名用户无法打分，请登录！' );
+	} else if( isDuplicated ) {
+		this.bindErrorTip( '您今日已经为此篇 wiki 打过分了！' );
+	} else {
+		this.unbindErrorTip();
 	}
 };
 
@@ -185,3 +212,4 @@ MoegirlRatingControl.prototype.setResultIcon = function( type ) {
 		$resultIcon.removeClass( 'success error loading' ).hide();
 	}
 };
+
