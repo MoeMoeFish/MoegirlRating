@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS /*_*/rating_record (
   user_id INT NOT NULL,
   rating_id INT NOT NULL,
   created_time DATETIME NOT NULL,
-  score TINYINT NOT NULL,
+  score TINYINT NOT NULL
 ) /*$wgDBTableOptions*/;
 	
 CREATE INDEX /*i*/rating_score ON /*_*/rating_record  (created_time, rating_id, wiki_id, user_id);
