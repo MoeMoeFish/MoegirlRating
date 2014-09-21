@@ -126,4 +126,4 @@ div.hide_result:hover {
 	line-height: 30px;
 }
 
-.rating_main .moegirl-rating-error-tip { padding: 5px;border: 1px solid #a55858;color: #a55858;font-size: 12px; position:absolute; left: 0; top:-40px;white-space: nowrap;display:none; }
+.rating_main .moegirl-rating-error-tip { padding: 0 10px;line-height: 24px;border: 1px solid #a55858;color: #a55858;font-size: 12px; position:absolute; left: 0; top:-30px;white-space: nowrap;display:none;background-color:#fff;z-index:1000; }
