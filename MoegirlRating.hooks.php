@@ -52,7 +52,7 @@ EOF;
 	}
 
 	public static function addDatabases( DatabaseUpdater $updater ) {
-		$updater->addExtensionUpdate( array( 'addTable', 'rating_record', __DIR__  . '/sql/create-rating-history-table.sql', true ) );
+		$updater->addExtensionUpdate( array( 'addTable', SqlSentences::$ratingRecordTable, __DIR__  . '/sql/create-rating-history-table.sql', true ) );
 
 		return true;
 	}

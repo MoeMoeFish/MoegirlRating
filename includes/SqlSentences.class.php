@@ -1,6 +1,6 @@
 <?php
 class SqlSentences {
-	public static $ratingRecordTable = 'rating_record';
+	public static $ratingRecordTable = 'moegirl_rating_record';
 
 	public static $getAverageScoreSentence = 'SELECT SUM(score) score, COUNT(score) users FROM %s WHERE wiki_id= %d AND rating_id= %d AND DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= created_time;';
 
