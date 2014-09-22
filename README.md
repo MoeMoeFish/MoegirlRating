@@ -34,7 +34,8 @@ php update.php
 
 **说明**：比此参数设置的日志级别高的日志才会被记录
 
-**默认值××：6
+**默认值**：6
+
 
 
 ##$wgMoegirlRatingLogDir
@@ -43,5 +44,6 @@ php update.php
 **说明**：log 记录的文件夹
 
 **默认值**：NULL，不记录log
+
 
 
