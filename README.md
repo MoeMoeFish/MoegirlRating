@@ -31,12 +31,17 @@ php update.php
 
 ##$wgMoegirlRatingLogLevel
 **可能值**：0 (Trace), 1 (Debug), 2 (Info), 3 (Warning), 4 (Error), 5 (Fatal), 6 (None)
+
 **说明**：比此参数设置的日志级别高的日志才会被记录
+
 **默认值××：6
 
 
 ##$wgMoegirlRatingLogDir
 **类型**：string
+
 **说明**：log 记录的文件夹
+
 **默认值**：NULL，不记录log
+
 
