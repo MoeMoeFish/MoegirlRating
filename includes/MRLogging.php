@@ -102,7 +102,7 @@ class MRLogging {
 	public static function logging( $level, $fileabsoluteName, $lineNumber, $format ) {
 		global $wgMoegirlRatingLogLevel, $wgMoegirlRatingLogDir;
 		
-		if ( $level >= $wgMoegirlRatingLogLevel &&  isset($wgMoegirlRatingLogDir)) {
+		if ( $level >= $wgMoegirlRatingLogLevel && isset($wgMoegirlRatingLogDir) ) {
 			$currentTime = (string)microtime();
 			$dateString = date( 'Ymd', substr($currentTime, 11, 20));
 			$timeString1 = date( 'Ymd H:i:s', substr($currentTime, 11, 20));

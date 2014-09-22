@@ -14,7 +14,9 @@ git clone https://github.com/FishThirteen/MoegirlRating.git
 ```
 
 在 `mediawiki/LocalSettings.php` 中加入 
-`require_once "$IP/extensions/MoegirlRating/MoegirlRating.php";`
+```php
+require_once "$IP/extensions/MoegirlRating/MoegirlRating.php";
+```
 
 升级数据库, 具体原理参考 https://www.mediawiki.org/wiki/Manual:Update.php 
 ```
@@ -25,3 +27,18 @@ php update.php
 一切 OK, 就应该在 wiki 中看到打分控件了
 
 #参数设置
+只有两个有关 log 的参数,
+
+=参数设置
+
+==$wgMoegirlRatingLogLevel
+**可能值**：0 (Trace), 1 (Debug), 2 (Info), 3 (Warning), 4 (Error), 5 (Fatal), 6 (None)
+**说明**：比此参数设置的日志级别高的日志才会被记录
+**默认值××：6
+
+
+==$wgMoegirlRatingLogDir
+**类型**：string
+**说明**：log 记录的文件夹
+**默认值**：NULL，不记录log
+
