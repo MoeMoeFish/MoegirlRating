@@ -29,15 +29,13 @@ php update.php
 #参数设置
 只有两个有关 log 的参数,
 
-=参数设置
-
-==$wgMoegirlRatingLogLevel
+##$wgMoegirlRatingLogLevel
 **可能值**：0 (Trace), 1 (Debug), 2 (Info), 3 (Warning), 4 (Error), 5 (Fatal), 6 (None)
 **说明**：比此参数设置的日志级别高的日志才会被记录
 **默认值××：6
 
 
-==$wgMoegirlRatingLogDir
+##$wgMoegirlRatingLogDir
 **类型**：string
 **说明**：log 记录的文件夹
 **默认值**：NULL，不记录log
