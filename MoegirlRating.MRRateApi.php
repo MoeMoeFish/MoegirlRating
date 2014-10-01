@@ -30,7 +30,7 @@ class MRRateApi extends ApiBase {
 		}
 
 
-		$ratingController = new RatingController( $ratingId, $wikiId, $user );
+		$ratingController = new RatingController( $ratingId, $wikiId, $user, $this->getRequest()->getIP() );
 
 		try {
 			$result = $ratingController->rate( $score );

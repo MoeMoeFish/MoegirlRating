@@ -7,14 +7,22 @@ class RatingController {
 	protected $service;
 	protected $currentUser;
 	private $logger;
+	private $ipAddress;
 
-	public function __construct( $ratingId, $wikiId, $currentUser ) {
+	public function __construct( $ratingId, $wikiId, $currentUser, $ipAddress ) {
 		$this->ratingId = $ratingId;
 		$this->currentUser = $currentUser;
-		$this->userId = $currentUser->getId();
 		$this->wikiId = $wikiId;
 		$this->service = new RatingService();
 		$this->service->setRatingId( $this->ratingId );
+		$this->ipAddress = $ipAddress;
+
+		if ( $this->currentUser->isAnon() ) {
+			$this->userId = $this->ipAddress;
+		} else {
+			$this->userId = $currentUser->getId();
+		}
+
 		
 		$this->logger = new MRLogging( __FILE__ );
 
@@ -29,13 +37,6 @@ class RatingController {
 		$data = array();
 
 		$data[ 'isAnonymous' ] = $this->isAnonymous();
-
-		if ( $data[ 'isAnonymous' ] ) {
-			$data[ 'isSuccess' ] = false;
-			$data[ 'errorMessage' ]  = '匿名用户不能投票';
-
-			return $data;
-		}
 
 		try {
 

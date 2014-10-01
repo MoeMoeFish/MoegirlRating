@@ -12,7 +12,6 @@ class MRGetTotalRatingApi extends ApiBase {
 		$ratingId = 0;
 		$user = $this->getUser();
 
-
 		if (!isset( $user )) {
 			$this->logger->debug( __LINE__, "Can't get user" );
 			throw new Exception( 'Can\'t get user' );
@@ -28,7 +27,7 @@ class MRGetTotalRatingApi extends ApiBase {
 			return true;
 		}
 
-		$ratingController = new RatingController( $ratingId, $wikiId, $user );
+		$ratingController = new RatingController( $ratingId, $wikiId, $user, $this->getRequest()->getIP() );
 
 		try {
 			$result = $ratingController->getScore();

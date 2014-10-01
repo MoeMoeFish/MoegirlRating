@@ -61,8 +61,8 @@ MoegirlRatingControl.prototype.init =  function() {
 			return;
 		}
 
-		self.prepareUnableClickError( data.isAnonymous, data.isDuplicated );
-		self.clickable = !data.isDuplicated && !data.isAnonymous;
+		self.prepareUnableClickError( data.isDuplicated );
+		self.clickable = !data.isDuplicated;
 
 		self.setResult( data.totalUsers, data.averageScore );
 		self.setScore( data.averageScore );
@@ -109,7 +109,7 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 		var self = this;
 		$.ajax({
 			url: 'api.php',
-			type: 'GET',
+			type: 'POST',
 			data: {
 				format: 'json',
 				score : ratingScore,
@@ -125,7 +125,7 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 				}
 
 				self.showSuccessMessage();
-				self.prepareUnableClickError( data.isAnonymous, true );
+				self.prepareUnableClickError( true );
 
 				// wait a while after show the "Success" message.
 				setTimeout(function() {
@@ -140,10 +140,8 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 	}
 };
 
-MoegirlRatingControl.prototype.prepareUnableClickError = function( isAnonymous, isDuplicated ) {
-	if ( isAnonymous ) {
-		this.bindErrorTip( '匿名用户无法打分，请登录！' );
-	} else if( isDuplicated ) {
+MoegirlRatingControl.prototype.prepareUnableClickError = function( isDuplicated ) {
+	if( isDuplicated ) {
 		this.bindErrorTip( '您今日已经为此篇 wiki 打过分了！' );
 	} else {
 		this.unbindErrorTip();
