@@ -33,7 +33,7 @@ $wgAutoloadClasses[ 'RatingService' ] = $wgMoegirlRatingIncludes . '/RatingServi
 $wgAutoloadClasses[ 'RatingController' ] = $wgMoegirlRatingIncludes . '/RatingController.class.php';
 $wgAutoloadClasses[ 'SqlSentences' ] = $wgMoegirlRatingIncludes . '/SqlSentences.class.php';
 
-$wgMoegirlRatingLogLevel = MRLogging::$NONE;
+$wgMoegirlRatingLogLevel = 6;
 $wgMoegirlRatingLogDir = NULL;
 
 
