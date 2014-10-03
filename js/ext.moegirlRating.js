@@ -45,7 +45,7 @@ window.MoegirlRatingControl = MoegirlRatingControl;
 MoegirlRatingControl.prototype.init =  function() {
 	var self = this;
 	$.ajax({
-		url: '/api.php',
+		url: 'api.php',
 		type: 'GET',
 		data: {
 			action: 'MRGetTotalRating',
