@@ -10,7 +10,7 @@ final class MoegirlRatingHooks {
 			|| $pageTitle->getArticleID() == 0
 			|| !$pageTitle->canTalk()
 			|| $pageTitle->isTalkPage()
-		//	|| method_exists( $pageTitle, 'isMainPage' ) && $pageTitle->isMainPage() // 主页
+			|| method_exists( $pageTitle, 'isMainPage' ) && $pageTitle->isMainPage() // 主页
 			|| in_array( $pageTitle->getNamespace(), array( NS_MEDIAWIKI, NS_TEMPLATE, NS_CATEGORY, NS_FILE))
 			|| $output->isPrintable()
 			|| $request->getVal( 'action', 'view' ) != 'view' 
