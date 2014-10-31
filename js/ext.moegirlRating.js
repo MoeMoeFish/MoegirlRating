@@ -34,9 +34,9 @@ function MoegirlRatingControl( id, wikiId ) {
 	this.id = id;
 	this.data = {};
 	this.clickable = true;
-	this.resultTextFormat = '<strong>{0}</strong> 人打分，平均分 <strong>{1}</strong> 分';
-	this.ratingSuccessText = '打分成功';
-	this.cannotLoadResultErrorText = '错误，无法加载打分结果';
+	this.resultTextFormat = '共计<strong>{0}</strong> 人评分，平均分 <strong>{1}</strong> 分';
+	this.ratingSuccessText = '评分成功';
+	this.cannotLoadResultErrorText = '错误，无法加载评分结果';
 	this.wikiId = wikiId;
 }
 
@@ -142,7 +142,7 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 
 MoegirlRatingControl.prototype.prepareUnableClickError = function( isDuplicated ) {
 	if( isDuplicated ) {
-		this.bindErrorTip( '您今日已经为此篇 wiki 打过分了！' );
+		this.bindErrorTip( '您今日已经为本页面打过分了！' );
 	} else {
 		this.unbindErrorTip();
 	}

@@ -26,7 +26,7 @@ final class MoegirlRatingHooks {
 		$data .=<<<EOF
 <div id="rating-main">
   <div class="moegirl_rating clearfix">
-    <div class="rating_title">给本篇wiki打分:</div>
+    <div class="rating_title">为本页面评分:</div>
     <div class="rating_body_disabled rating_main" >
       <ul class="mr-rating-ul">
         <li><a class="r-1" >1</a></li>
