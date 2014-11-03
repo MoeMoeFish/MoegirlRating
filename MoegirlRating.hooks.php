@@ -6,12 +6,15 @@ final class MoegirlRatingHooks {
 		$output = $skin->getOutput();
 		$request = $skin->getRequest();
 
+
+		MRLogging::logging( MRLogging::$INFO, __FILE__, __LINE__, 'Namespace: '. $pageTitle->getNamespace() );
+
 		if ( $pageTitle->isSpecialPage()
 			|| $pageTitle->getArticleID() == 0
 			|| !$pageTitle->canTalk()
 			|| $pageTitle->isTalkPage()
 			|| method_exists( $pageTitle, 'isMainPage' ) && $pageTitle->isMainPage() // 主页
-			|| in_array( $pageTitle->getNamespace(), array( NS_MEDIAWIKI, NS_TEMPLATE, NS_CATEGORY, NS_FILE))
+			|| in_array( $pageTitle->getNamespace(), array( NS_MEDIAWIKI, NS_TEMPLATE, NS_CATEGORY, NS_FILE, NS_USER ))
 			|| $output->isPrintable()
 			|| $request->getVal( 'action', 'view' ) != 'view' 
 			) {
@@ -22,6 +25,8 @@ final class MoegirlRatingHooks {
 
 		$articleId = $skin->getTitle()->getArticleID();
 		MRLogging::logging( MRLogging::$INFO, __FILE__, __LINE__, 'Moegirl rating show in wiki: ' . $articleId );
+
+		global $wgScriptPath;
 
 		$data .=<<<EOF
 <div id="rating-main">
@@ -44,7 +49,7 @@ final class MoegirlRatingHooks {
 </div>
 <script type="text/javascript" >
 	mw.loader.using( 'ext.MoegirlRating', function() {
-		new MoegirlRatingControl( '#rating-main', $articleId ).init();
+		new MoegirlRatingControl( '#rating-main', $articleId, '$wgScriptPath' ).init();
 	});
 </script>
 EOF;

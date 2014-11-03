@@ -30,14 +30,15 @@ window.stringFormat = function ( format, args ) {
 };
 
 
-function MoegirlRatingControl( id, wikiId ) {
+function MoegirlRatingControl( id, wikiId, scriptPath ) {
 	this.id = id;
 	this.data = {};
 	this.clickable = true;
-	this.resultTextFormat = '共计<strong>{0}</strong> 人评分，平均分 <strong>{1}</strong> 分';
+	this.resultTextFormat = '共计 <strong>{0}</strong> 人评分，平均分 <strong>{1}</strong> 分';
 	this.ratingSuccessText = '评分成功';
 	this.cannotLoadResultErrorText = '错误，无法加载评分结果';
 	this.wikiId = wikiId;
+	this.apiPath = '/' + scriptPath + 'api.php';
 }
 
 window.MoegirlRatingControl = MoegirlRatingControl;
@@ -45,12 +46,12 @@ window.MoegirlRatingControl = MoegirlRatingControl;
 MoegirlRatingControl.prototype.init =  function() {
 	var self = this;
 	$.ajax({
-		url: 'api.php',
+		url: self.apiPath,
 		type: 'GET',
 		data: {
 			action: 'MRGetTotalRating',
 			format: 'json',
-			wikiId: this.wikiId
+			wikiId: self.wikiId
 		},
 		datatype: 'json'
 	})
@@ -108,7 +109,7 @@ MoegirlRatingControl.prototype.ratingClick = function( event ) {
 
 		var self = this;
 		$.ajax({
-			url: 'api.php',
+			url: self.apiPath,
 			type: 'POST',
 			data: {
 				format: 'json',
