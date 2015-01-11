@@ -54,7 +54,7 @@ class MRRateApi extends ApiBase {
 	}
 
 	public function getAllowedParams() {
-		return array_merge( parent::getAllowedParams() , array(
+		return array(
 				'wikiId' => array(
 					ApiBase::PARAM_TYPE => 'int',
 					ApiBase::PARAM_REQUIRED => true
@@ -62,7 +62,7 @@ class MRRateApi extends ApiBase {
 				'score' => array(
 					ApiBase::PARAM_TYPE => 'int',
 					ApiBase::PARAM_REQUIRED => true)
-				));
+				);
 	}
 
 	public function getExample() {
