@@ -52,7 +52,7 @@ class MRGetTotalRatingApi extends ApiBase {
 	}
 
 	public function getAllowedParams() {
-		return array_merge( parent::getAllowedParams(), array(
+		return array_merge( array(), array(
 			'wikiId' => array (
 				ApiBase::PARAM_TYPE => 'string',
 				ApiBase::PARAM_REQUIRED => true
