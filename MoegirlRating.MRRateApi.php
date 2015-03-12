@@ -56,11 +56,11 @@ class MRRateApi extends ApiBase {
 	public function getAllowedParams() {
 		return array(
 				'wikiId' => array(
-					ApiBase::PARAM_TYPE => 'int',
+					ApiBase::PARAM_TYPE => 'integer',
 					ApiBase::PARAM_REQUIRED => true
 				),
 				'score' => array(
-					ApiBase::PARAM_TYPE => 'int',
+					ApiBase::PARAM_TYPE => 'integer',
 					ApiBase::PARAM_REQUIRED => true)
 				);
 	}
