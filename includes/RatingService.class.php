@@ -6,6 +6,7 @@ class RatingService {
 	private static $dbConnectionString = 'mysql:host=127.0.0.1;port=3306;dbname=mediawiki';
 	private static $dbUser = 'mediawiki';
 	private static $dbPassword = '123';
+    private static $maxRatingCount = 30;
 
 
 	public function __construct() {
@@ -20,7 +21,7 @@ class RatingService {
 	public function getAverageScore( $wikiId, &$averageScore, &$totalUsers ) {
 		try {
 			$dbr =& wfGetDB( DB_SLAVE );
-			$sql = sprintf( SqlSentences::$getAverageScoreSentence, $dbr->tableName( SqlSentences::$ratingRecordTable ), $wikiId, $this->ratingId );
+			$sql = sprintf( SqlSentences::$getAverageScoreSentence, $dbr->tableName( SqlSentences::$ratingRecordTable ), $wikiId, $this->ratingId, RatingService::$maxRatingCount );
 			$this->logger->debug( __LINE__, 'getAverageScore sql is ' . $sql );
 			
 			$output = $dbr->query( $sql, __METHOD__ );
