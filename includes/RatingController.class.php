@@ -36,14 +36,14 @@ class RatingController {
 	public function rate( $score ) {
 		$data = array();
 
-		$data[ 'isAnonymous' ] = $this->isAnonymous();
+		$data[ 'isAnonymous' ] = $this->isAnonymous() ? 1 : 0;
 
 		try {
 
-			$data[ 'isDuplicated' ] = $this->service->hasRatingToday( $this->wikiId, $this->userId );
+			$data[ 'isDuplicated' ] = $this->service->hasRatingToday( $this->wikiId, $this->userId ) ? 1 : 0;
 
-			if ( $data[ 'isDuplicated' ] ) {
-				$data[ 'isSuccess' ] = false;
+			if ( $data[ 'isDuplicated' ]  == 1 ) {
+				$data[ 'isSuccess' ] = 0;
 				$data[ 'errorMessage' ] = '今日已经投票，请明日再试';
 
 				return $data;
@@ -52,7 +52,7 @@ class RatingController {
 			$score = (int)$score;
 
 			if ( $score <= 0 || $score > 5 ) {
-				return array( isSuccess => false, errorMessage => '参数错误，投票分数不正确' );
+				return array( isSuccess => 0, errorMessage => '参数错误，投票分数不正确' );
 			}
 
 			$this->service->rateWiki( $this->wikiId, $this->userId, $score);
@@ -63,13 +63,13 @@ class RatingController {
 			$this->service->getAverageScore( $this->wikiId, $averageScore, $totalUsers );
 
 			$data[ 'averageScore' ] = round( $averageScore, 2 );
-			$data[ 'totalUsers' ] = $totalUsers;
-			$data[ 'isSuccess' ] = true;
+			$data[ 'totalUsers' ] = (int)$totalUsers;
+			$data[ 'isSuccess' ] = 1;
 
 			return $data;
 		
 		} catch ( Exception $ex ) {
-			return array( isSuccess => false, errorMessage => $ex->getMessage() );
+			return array( isSuccess => 0, errorMessage => $ex->getMessage() );
 		}
 	}
 
@@ -78,21 +78,21 @@ class RatingController {
 				
 		if ( !$this->checkRatingContext() ) {
 			return array(
-				'isSuccess' => false,
+				'isSuccess' => 0,
 				'message' => '系统错误：无法获取wiki页面信息'
 				);
 		}
 
-		$data[ 'isAnonymous' ] = $this->isAnonymous();
+		$data[ 'isAnonymous' ] = $this->isAnonymous() ? 1 : 0;
 	
 		try {
-			$data[ 'isDuplicated' ] = $this->service->hasRatingToday( $this->wikiId, $this->userId );
+			$data[ 'isDuplicated' ] = $this->service->hasRatingToday( $this->wikiId, $this->userId ) ? 1 : 0;
 			$averageScore = 0;
 			$totalUsers = 0;
 			$this->service->getAverageScore( $this->wikiId, $averageScore, $totalUsers );
-			$data[ 'totalUsers' ] = $totalUsers;
+			$data[ 'totalUsers' ] = intval( $totalUsers );
 			$data[ 'averageScore' ] = round( $averageScore, 2 );
-			$data[ 'isSuccess' ] = true;
+			$data[ 'isSuccess' ] = 1;
 
 			$this->logger->debug( __LINE__, 'Rating result, wikiId: %d, totalUsers %d, averageScore %d', $this->wikiId, $totalUsers, $averageScore );
 				
@@ -100,7 +100,7 @@ class RatingController {
 		
 		} catch ( Exception $ex ) {
 			$this->logger->debug( __LINE__, 'Get Rating total score error: %s', $ex->getMessage() );
-			$data[ 'isSuccess' ] = false;
+			$data[ 'isSuccess' ] = 0;
 			$data[ 'message' ] = $ex->getMessage();
 	
 			return $data;

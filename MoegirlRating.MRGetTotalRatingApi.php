@@ -21,7 +21,7 @@ class MRGetTotalRatingApi extends ApiBase {
 		if (!is_int( $wikiId )) {
 			$this->logger->error( __LINE__, 'wikiId 格式不正确' );
 			$this->getResult()->addValue( null, $this->getModuleName(), array(
-					'isSuccess' => false,
+					'isSuccess' => 0,
 					'message' => 'wikiId 格式不正确'
 					));	
 			return true;
@@ -39,7 +39,7 @@ class MRGetTotalRatingApi extends ApiBase {
 			$this->logger->error( __LINE__, 'Cannot get the rating score, wikiId %d', $wikiId );
 
 			$this->getResult()->addValue( null, $this->getModuleName(), array(
-					'isSuccess' => false,
+					'isSuccess' => 0,
 					'message' => '服务器错误，请稍后再试'
 					));
 		}
