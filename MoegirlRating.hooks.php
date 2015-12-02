@@ -48,9 +48,12 @@ final class MoegirlRatingHooks {
   </div>
 </div>
 <script type="text/javascript" >
+window.RLQ = window.RLQ || [];
+window.RLQ.push(function(){
 	mw.loader.using( 'ext.MoegirlRating', function() {
 		new MoegirlRatingControl( '#rating-main', $articleId, '$wgScriptPath' ).init();
 	});
+});
 </script>
 EOF;
 
