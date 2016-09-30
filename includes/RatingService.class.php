@@ -20,7 +20,7 @@ class RatingService {
 
 	public function getAverageScore( $wikiId, &$averageScore, &$totalUsers ) {
 		try {
-			$dbr =& wfGetDB( DB_SLAVE );
+			$dbr = wfGetDB( DB_SLAVE );
 			$sql = sprintf( SqlSentences::$getAverageScoreSentence, $dbr->tableName( SqlSentences::$ratingRecordTable ), $wikiId, $this->ratingId, RatingService::$maxRatingCount );
 			$this->logger->debug( __LINE__, 'getAverageScore sql is ' . $sql );
 			
@@ -51,7 +51,7 @@ class RatingService {
 
 	public function hasRatingToday( $wikiId, $userId ) {
 		try {
-			$dbr =& wfGetDB( DB_SLAVE );
+			$dbr = wfGetDB( DB_SLAVE );
 			$sql = sprintf( SqlSentences::$hasRatingTodaySentence, $dbr->tableName( SqlSentences::$ratingRecordTable ), $userId, $wikiId, $this->ratingId );
 			$this->logger->debug( __LINE__,  'hasRatingToday sql is ' . $sql );
 		
